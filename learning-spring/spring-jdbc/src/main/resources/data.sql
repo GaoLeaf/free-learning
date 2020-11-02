@@ -1,0 +1,1 @@
+INSERT INTO t_foo (BAR) VALUES ('aaa');
