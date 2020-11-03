@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import javax.sql.DataSource;
 
@@ -23,6 +24,9 @@ public class JdbcDemoApplication implements CommandLineRunner {
     @Autowired
     private FooDao fooDao;
 
+    @Autowired
+    private BatchFooDao batchFooDao;
+
     public static void main(String[] args) {
         SpringApplication.run(JdbcDemoApplication.class, args);
     }
@@ -32,10 +36,16 @@ public class JdbcDemoApplication implements CommandLineRunner {
         return new NamedParameterJdbcTemplate(dataSource);
     }
 
+    @Bean
+    public SimpleJdbcInsert simpleJdbcInsert(JdbcTemplate jdbcTemplate) {
+        return new SimpleJdbcInsert(jdbcTemplate).withTableName("t_foo").usingGeneratedKeyColumns("ID"); // 指定表主键
+    }
+
     @Override
     public void run(String... args) throws Exception {
 
         fooDao.insert();
+        batchFooDao.batchInsert();
         fooDao.listData();
 
     }
