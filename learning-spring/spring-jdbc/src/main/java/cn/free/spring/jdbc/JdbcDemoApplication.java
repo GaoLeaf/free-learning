@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
 
 /**
  * @author gaowenjin
@@ -26,6 +27,13 @@ public class JdbcDemoApplication implements CommandLineRunner {
 
     @Autowired
     private BatchFooDao batchFooDao;
+
+    /**
+     * spring-boot-autoconfigure
+     * DataSourceAutoConfiguration 初始化数据源
+     */
+    @Autowired
+    private DataSource dataSource;
 
     public static void main(String[] args) {
         SpringApplication.run(JdbcDemoApplication.class, args);
@@ -44,9 +52,20 @@ public class JdbcDemoApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
+        // print connection info
+        showConnection();
+
+        // SQL operation
         fooDao.insert();
         batchFooDao.batchInsert();
         fooDao.listData();
 
+    }
+
+    public void showConnection() throws Exception {
+        log.info("数据源信息： {}", dataSource.toString());
+        Connection connection = dataSource.getConnection();
+        log.info("数据库连接信息: {}", connection.toString());
+        connection.close();
     }
 }
