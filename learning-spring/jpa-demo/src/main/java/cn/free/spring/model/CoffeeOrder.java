@@ -4,18 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-import org.omg.CORBA.PRIVATE_MEMBER;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,27 +22,19 @@ import java.util.List;
 @Entity
 @Table(name = "T_ORDER")
 @Data
+@ToString(callSuper = true)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CoffeeOrder {
-
-    @Id
-    @GeneratedValue
-    private Long id;
+public class CoffeeOrder extends BaseEntity<Long> {
 
     private String customer;
 
     @ManyToMany
     @JoinTable(name = "T_ORDER_COFFEE")
+    @OrderBy("id")
     private List<Coffee> items;
 
     @Column(nullable = false)
-    private  Integer state;
-
-    @CreationTimestamp
-    private Date createTime;
-
-    @UpdateTimestamp
-    private Date updateTime;
+    private  OrderState state;
 }
