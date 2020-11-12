@@ -1,0 +1,4 @@
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true # 开启驼峰
+  type-handlers-package: cn.free.spring.mybatis.demo.handler
